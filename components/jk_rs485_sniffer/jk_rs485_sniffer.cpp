@@ -587,7 +587,6 @@ void JkRS485Sniffer::loop() {
 
     // bulk to Received data to "rx_buffer_"
     ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-Getting buffer-->");
-
     uint8_t byte;
     while (this->available() && (this->rx_buffer_.size() < this->rx_buffer_.max_size())) {
       this->read_byte(&byte);
@@ -1155,7 +1154,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     bool found = false;
 
     ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: on_jk_rs485_sniffer_data()--><");
-    
+
     for (auto *device : this->devices_) {
       // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: on_jk_rs485_sniffer_data()-->");
 
