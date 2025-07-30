@@ -586,13 +586,14 @@ void JkRS485Sniffer::loop() {
     }
 
     // bulk to Received data to "rx_buffer_"
-    ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-Getting buffer-->");
+    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer-->");
     uint8_t byte;
     while (this->available() && (this->rx_buffer_.size() < this->rx_buffer_.max_size())) {
       this->read_byte(&byte);
       this->rx_buffer_.push_back(byte);
     }
-    ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
+    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
+    printBuffer_segmented(this->rx_buffer_.size());    
 
 
     now = millis();
