@@ -614,13 +614,13 @@ void JkRS485Sniffer::loop() {
       // ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-Do.............");
       cont_manage++;
       // ESP_LOGV(TAG, "JkRS485Sniffer::loop()-Buffer number %d:[%s]", cont_manage, format_hex_pretty(&this->rx_buffer_.front(), this->rx_buffer_.size()).c_str());
-      ESP_LOGV(TAG, "JkRS485Sniffer::loop()-loop number %d:", cont_manage);
+      ESP_LOGE(TAG, "JkRS485Sniffer::loop()-loop number %d:", cont_manage);
       printBuffer_segmented(this->rx_buffer_.size());        
       //ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-[buffer: %d bytes]",this->rx_buffer_.size());                        
       
       response = this->manage_rx_buffer_();
 
-      ESP_LOGV(TAG, "JkRS485Sniffer::loop()-manage_rx_buffer_()-Response:            %d:", response);
+      ESP_LOGE(TAG, "JkRS485Sniffer::loop()-manage_rx_buffer_()-Response:            %d:", response);
 
       if (original_buffer_size == rx_buffer_.size()) {
         changed = false;
@@ -903,7 +903,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
   // ESP_LOGV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-[buffer: %d bytes]",this->rx_buffer_.size());
 
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_SHORT_REQUEST_SIZE) {
-    ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()- this->rx_buffer_.size() [%d bytes] >= JKPB_RS485_MASTER_SHORT_REQUEST_SIZE: [%d bytes]",this->rx_buffer_.size(),JKPB_RS485_MASTER_SHORT_REQUEST_SIZE);
+    ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()- this->rx_buffer_.size() [%d bytes] >= JKPB_RS485_MASTER_SHORT_REQUEST_SIZE: [%d bytes]",this->rx_buffer_.size(),JKPB_RS485_MASTER_SHORT_REQUEST_SIZE);
 
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
 
@@ -948,7 +948,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_REQUEST_SIZE) {
 
-    ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()- this->rx_buffer_.size() [%d bytes] >= JKPB_RS485_MASTER_REQUEST_SIZE: [%d bytes]",this->rx_buffer_.size(),JKPB_RS485_MASTER_REQUEST_SIZE);
+    ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()- this->rx_buffer_.size() [%d bytes] >= JKPB_RS485_MASTER_REQUEST_SIZE: [%d bytes]",this->rx_buffer_.size(),JKPB_RS485_MASTER_REQUEST_SIZE);
 
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
     bool try_with_master_request_size = false;
@@ -1053,8 +1053,8 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
       return(4);
     }
   } else {
-      ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: Return 5 ??¿¿??¿");
-    return(5);
+      ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: Return 5 - BUFFER_RESPONSE_BUFFER_SIZE_LESS_THAN_JKPB_RS485_RESPONSE_SIZE");
+    return(BUFFER_RESPONSE_BUFFER_SIZE_LESS_THAN_JKPB_RS485_RESPONSE_SIZE);
   }
 
   // Start sequence (0x55AAEB90) //55aaeb90 0105
@@ -1148,7 +1148,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
     std::vector<uint8_t> data(this->rx_buffer_.begin() + 0, this->rx_buffer_.begin() + this->rx_buffer_.size() + 1);
 
-    ESP_LOGD(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
+    ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
     // ESP_LOGVV(TAG, "[%s]", format_hex_pretty(&data.front(), data.size()).c_str());
     printBuffer_segmented(this->rx_buffer_.size());      
 
@@ -1183,7 +1183,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
   
   printBuffer_segmented(this->rx_buffer_.size());
 
-  ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-Return 12 ??¿¿??¿");
+  ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-Return 12 - BUFFER_RESPONSE_FRAME_PROCESSED");
   // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()--<"); 
   return(BUFFER_RESPONSE_FRAME_PROCESSED);
 }
