@@ -56,55 +56,55 @@ TEXT_SENSORS = [
 
 CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_OPERATION_STATUS): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_OPERATION_STATUS): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_OPERATION_MODE): cv.icon,
             }
         ),
-        cv.Optional(CONF_ERRORS): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_ERRORS): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_ERRORS): cv.icon,
             }
         ),
-        cv.Optional(CONF_BATTERY_TYPE): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_BATTERY_TYPE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_BATTERY_TYPE): cv.icon,
             }
         ),
-        cv.Optional(CONF_PASSWORD): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_PASSWORD): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_PASSWORD): cv.icon,
             }
         ),
-        cv.Optional(CONF_DEVICE_TYPE): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_DEVICE_TYPE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
             }
         ),
-        cv.Optional(CONF_SOFTWARE_VERSION): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_SOFTWARE_VERSION): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
             }
         ),
-        cv.Optional(CONF_MANUFACTURER): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_MANUFACTURER): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
             }
         ),
-        cv.Optional(CONF_TOTAL_RUNTIME_FORMATTED): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_TOTAL_RUNTIME_FORMATTED): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_TIMELAPSE): cv.icon,
             }
         ),
-        cv.Optional(CONF_NETWORK_NODES_AVAILABLE): TEXT_SENSOR_SCHEMA(
+        cv.Optional(CONF_NETWORK_NODES_AVAILABLE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_NETWORK): cv.icon,
@@ -112,7 +112,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),    
         cv.Optional(
             CONF_INFO_VENDORID
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -120,7 +120,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),
         cv.Optional(
             CONF_INFO_HARDWARE_VERSION
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -128,7 +128,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),
         cv.Optional(
             CONF_INFO_SOFTWARE_VERSION
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -136,7 +136,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),
         cv.Optional(
             CONF_INFO_DEVICE_NAME
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -144,7 +144,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),
         cv.Optional(
             CONF_INFO_DEVICE_PASSWORD
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -152,7 +152,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),   
         cv.Optional(
             CONF_INFO_DEVICE_SERIAL_NUMBER
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
@@ -160,7 +160,7 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
         ),                    
         cv.Optional(
             CONF_INFO_DEVICE_SETUP_PASSCODE
-        ): TEXT_SENSOR_SCHEMA(
+        ): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
                 cv.Optional(CONF_ICON, default=ICON_INFORMATION): cv.icon,
