@@ -586,15 +586,14 @@ void JkRS485Sniffer::loop() {
     }
 
     // bulk to Received data to "rx_buffer_"
-    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<>");
+    // ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<>");
     
     uint8_t byte;
     while (this->available() && (this->rx_buffer_.size() < this->rx_buffer_.max_size())) {
       this->read_byte(&byte);
       this->rx_buffer_.push_back(byte);
     }
-
-    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
+    // ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
     printBuffer_segmented(this->rx_buffer_.size());    
 
     if (this->rx_buffer_.size() == JKPB_RS485_MASTER_SHORT_REQUEST_SIZE) {
@@ -621,6 +620,11 @@ void JkRS485Sniffer::loop() {
         if (index > 0) {
           ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: index > 0:");      
           this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + index);
+          printBuffer_segmented(this->rx_buffer_.size());          
+        }
+        else
+        {
+          ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: index = 0:");
           printBuffer_segmented(this->rx_buffer_.size());          
         }
       }
