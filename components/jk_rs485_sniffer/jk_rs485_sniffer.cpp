@@ -586,15 +586,19 @@ void JkRS485Sniffer::loop() {
     }
 
     // bulk to Received data to "rx_buffer_"
-    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer-->");
+    ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<>");
+    
     uint8_t byte;
     while (this->available() && (this->rx_buffer_.size() < this->rx_buffer_.max_size())) {
       this->read_byte(&byte);
       this->rx_buffer_.push_back(byte);
     }
+
     ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
     printBuffer_segmented(this->rx_buffer_.size());    
+    this->rx_buffer_.clear();
 
+    break;
 
     now = millis();
     this->last_jk_rs485_network_activity_ = now;
@@ -615,7 +619,7 @@ void JkRS485Sniffer::loop() {
       cont_manage++;
       // ESP_LOGV(TAG, "JkRS485Sniffer::loop()-Buffer number %d:[%s]", cont_manage, format_hex_pretty(&this->rx_buffer_.front(), this->rx_buffer_.size()).c_str());
       ESP_LOGE(TAG, "JkRS485Sniffer::loop()-loop number %d:", cont_manage);
-      printBuffer_segmented(this->rx_buffer_.size());        
+      // printBuffer_segmented(this->rx_buffer_.size());        
       //ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-[buffer: %d bytes]",this->rx_buffer_.size());                        
       
       response = this->manage_rx_buffer_();
@@ -629,7 +633,7 @@ void JkRS485Sniffer::loop() {
         original_buffer_size = this->rx_buffer_.size();
       }
 
-      ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-do-exit-buffer size changed: %d (0 false - 1 true) ", changed);
+      ESP_LOGE(TAG, "JkRS485Sniffer::loop()-do-exit-buffer size changed: %d (0 false - 1 true) ", changed);
 
       // ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-While.............");
 
@@ -808,7 +812,7 @@ void JkRS485Sniffer::printBuffer_segmented(uint16_t max_length) {
     // Definimos el ancho máximo de la línea de salida del HEX.
     // Esto se refiere al número de bytes por línea para mayor claridad.
     // 16 bytes por línea es un tamaño común y legible (32 caracteres hexadecimales + espacios).
-    const int BYTES_PER_LINE = 42; 
+    const int BYTES_PER_LINE = 25; 
 
     // Imprimimos la cabecera del log una vez
     // Usamos ESP_LOGI o el nivel de log que consideres más apropiado (ESP_LOGV, ESP_LOGD, etc.)
@@ -860,7 +864,7 @@ void JkRS485Sniffer::printBuffer_segmented(uint16_t max_length) {
                 }
             }
             // Imprimimos la línea de HEX completa
-            ESP_LOGE(TAG, "  %s", current_line_hex.c_str());
+            ESP_LOGE(TAG, "  %s [%d bytes per line]", current_line_hex.c_str(), BYTES_PER_LINE );
         }
     }
 }
@@ -916,7 +920,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
 
       if (computed_checksum != remote_checksum) {
-        ESP_LOGV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_MASTER_SHORT_REQUEST_SIZE: CHECKSUM failed! 0x%04X != 0x%04X", computed_checksum, remote_checksum);
+        ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_MASTER_SHORT_REQUEST_SIZE: CHECKSUM failed! 0x%04X != 0x%04X", computed_checksum, remote_checksum);
         // IT IS NOT A SHORT REQUEST OR THERE WAS A COMM. ERROR --> continue whith manage_rx_buffer code
       } else {
         ESP_LOGV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_MASTER_SHORT_REQUEST_SIZE: CHECKSUM OK! 0x%04X == 0x%04X", computed_checksum, remote_checksum);
@@ -979,7 +983,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
 
       if (computed_checksum != remote_checksum) {
-        ESP_LOGV(TAG, "CHECKSUM failed! 0x%04X != 0x%04X", computed_checksum, remote_checksum);
+        ESP_LOGE(TAG, "CHECKSUM failed! 0x%04X != 0x%04X", computed_checksum, remote_checksum);
         // NO, OR THERE WAS A COMM. ERROR
       } else {
         ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_MASTER_REQUEST_SIZE -CHECKSUM OK! 0x%04X == 0x%04X", computed_checksum, remote_checksum);
@@ -1086,7 +1090,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2 - chksum() - Position in frame JKPB_RS485_CHECKSUM_INDEX = %d value 0x%04X ; JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM = %d value 0x%04X",JKPB_RS485_CHECKSUM_INDEX, raw[JKPB_RS485_CHECKSUM_INDEX] , JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM, computed_checksum);
 
     if (computed_checksum != remote_checksum) {
-      ESP_LOGW(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM failed! 0x%02X != 0x%02X", computed_checksum, remote_checksum);
+      ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM failed! 0x%04X != 0x%04X", computed_checksum, remote_checksum);
       
       auto it_next = std::search(this->rx_buffer_.begin() + 1, this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
       size_t index_next = std::distance(this->rx_buffer_.begin(), it_next);
