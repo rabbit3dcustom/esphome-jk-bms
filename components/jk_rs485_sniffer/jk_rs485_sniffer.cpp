@@ -642,7 +642,7 @@ void JkRS485Sniffer::loop() {
         uint8_t address = 0;
         uint8_t frame_type = 0;
         address = raw_ptr[JKPB_RS485_ADDRESS_OF_RS485_ADDRESS];
-        frame_type = raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS]
+        frame_type = raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS];
 
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address: 0x%02X - frame: 0x%02X ", address, frame_type);
 
