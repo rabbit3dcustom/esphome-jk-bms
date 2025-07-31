@@ -598,7 +598,7 @@ void JkRS485Sniffer::loop() {
     printBuffer_segmented(this->rx_buffer_.size());    
     this->rx_buffer_.clear();
 
-    return 0;
+    return;
 
     now = millis();
     this->last_jk_rs485_network_activity_ = now;
