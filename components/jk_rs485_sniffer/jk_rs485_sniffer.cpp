@@ -607,15 +607,31 @@ void JkRS485Sniffer::loop() {
 
     if (this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE)
     {
-          ESP_LOGE(TAG, "Buffer size: %d", this->rx_buffer_.size());     
+      ESP_LOGE(TAG, "Buffer size: %d", this->rx_buffer_.size());     
 
-          // const uint8_t *raw = &this->rx_buffer_[0];
-          std::vector<uint8_t> raw_copy;
-          raw_copy.assign(this->rx_buffer_.begin(), this->rx_buffer_.end());        
-          const uint8_t *raw_ptr = raw_copy.data(); // O &raw_copy[0]            
+      auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
 
-          uint8_t computed_checksum = chksum(raw_ptr, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
-          uint8_t remote_checksum = raw_ptr[JKPB_RS485_CHECKSUM_INDEX];
+      if (it != this->rx_buffer_.end()) {
+        // Sequence found, but where?
+
+        size_t index = std::distance(this->rx_buffer_.begin(), it);
+        
+        ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: search position: index: [%d]",index);      
+
+        if (index > 0) {
+          ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE: index > 0:");      
+          this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + index);
+          printBuffer_segmented(this->rx_buffer_.size());          
+        }
+      }
+
+      // const uint8_t *raw = &this->rx_buffer_[0];
+      std::vector<uint8_t> raw_copy;
+      raw_copy.assign(this->rx_buffer_.begin(), this->rx_buffer_.end());        
+      const uint8_t *raw_ptr = raw_copy.data(); // O &raw_copy[0]            
+
+      uint8_t computed_checksum = chksum(raw_ptr, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
+      uint8_t remote_checksum = raw_ptr[JKPB_RS485_CHECKSUM_INDEX];
 
       if (computed_checksum != remote_checksum) {
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM failed! 0x%02X != 0x%02X", computed_checksum, remote_checksum);
