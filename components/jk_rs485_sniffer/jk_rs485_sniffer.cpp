@@ -614,13 +614,15 @@ void JkRS485Sniffer::loop() {
 
       }
 
+
+      this->rx_buffer_.clear();
     }
     else
     {
-      ESP_LOGE(TAG, "Buffer size: %d", this->rx_buffer_.size());
+      ESP_LOGE(TAG, "ELSE: Buffer size is less than JKPB_RS485_RESPONSE_SIZE: %d", this->rx_buffer_.size());
     }
 
-    this->rx_buffer_.clear();
+
 
     return;
 
