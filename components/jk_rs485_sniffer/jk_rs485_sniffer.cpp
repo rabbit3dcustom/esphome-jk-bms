@@ -607,7 +607,7 @@ void JkRS485Sniffer::loop() {
 
     if (this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE)
     {
-      ESP_LOGE(TAG, "Buffer size: %d", this->rx_buffer_.size());     
+      ESP_LOGE(TAG, "Buffer size: %d >= JKPB_RS485_RESPONSE_SIZE", this->rx_buffer_.size());     
 
       auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
 
@@ -639,9 +639,11 @@ void JkRS485Sniffer::loop() {
       else
       {
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM OK 0x%02X == 0x%02X", computed_checksum, remote_checksum);
+        uint8_t address = 0;
+        address = raw[JKPB_RS485_ADDRESS_OF_RS485_ADDRESS];
+        ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address: 0x%02X", address);
 
       }
-
 
       this->rx_buffer_.clear();
     }
