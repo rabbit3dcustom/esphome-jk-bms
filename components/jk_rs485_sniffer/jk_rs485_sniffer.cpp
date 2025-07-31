@@ -631,7 +631,7 @@ void JkRS485Sniffer::loop() {
 
       // const uint8_t *raw = &this->rx_buffer_[0];
       std::vector<uint8_t> raw_copy;
-      raw_copy.assign(this->rx_buffer_.begin(), this->rx_buffer_.end());        
+      raw_copy.assign(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE - 1);
       const uint8_t *raw_ptr = raw_copy.data(); // O &raw_copy[0]            
 
       uint8_t computed_checksum = chksum(raw_ptr, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
@@ -650,9 +650,12 @@ void JkRS485Sniffer::loop() {
 
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address: 0x%02X - frame: 0x%02X ", address, frame_type);
 
+        this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE - 1);
+          printBuffer_segmented(this->rx_buffer_.size());          
+
       }
 
-      this->rx_buffer_.clear();
+      //this->rx_buffer_.clear();
     }
     else
     {
