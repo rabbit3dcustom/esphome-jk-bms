@@ -639,6 +639,7 @@ void JkRS485Sniffer::loop() {
 
       if (computed_checksum != remote_checksum) {
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM failed! 0x%02X != 0x%02X", computed_checksum, remote_checksum);
+        this->rx_buffer_.clear();
       }
       else
       {
@@ -651,7 +652,7 @@ void JkRS485Sniffer::loop() {
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address: 0x%02X - frame: 0x%02X ", address, frame_type);
 
         this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE - 1);
-          printBuffer_segmented(this->rx_buffer_.size());          
+        printBuffer_segmented(this->rx_buffer_.size());          
 
       }
 
