@@ -609,9 +609,12 @@ void JkRS485Sniffer::loop() {
     {
           ESP_LOGE(TAG, "Buffer size: %d", this->rx_buffer_.size());     
 
-          const uint8_t *raw = &this->rx_buffer_[0];      
-          uint8_t computed_checksum = chksum(raw, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
-          uint8_t remote_checksum = raw[JKPB_RS485_CHECKSUM_INDEX];
+          // const uint8_t *raw = &this->rx_buffer_[0];
+          std::vector<uint8_t> raw_copy;
+          raw_copy.assign(this->rx_buffer_.begin(), this->rx_buffer_.end());          
+
+          uint8_t computed_checksum = chksum(raw_copy, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
+          uint8_t remote_checksum = raw_copy[JKPB_RS485_CHECKSUM_INDEX];
 
       if (computed_checksum != remote_checksum) {
         ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: CHECKSUM failed! 0x%02X != 0x%02X", computed_checksum, remote_checksum);
