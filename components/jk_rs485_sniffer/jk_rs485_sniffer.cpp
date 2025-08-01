@@ -571,7 +571,7 @@ void JkRS485Sniffer::loop() {
 
   ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-->");
 
-  if ( this->rx_buffer_.size() == this->rx_buffer_.max_size() ||  this->rx_buffer_.size() < 0 ) {
+  if ( this->rx_buffer_.size() == this->rx_buffer_.max_size() ||  this->rx_buffer_.size() <= 0 ) {
     ESP_LOGW(TAG, "JkRS485Sniffer::loop()-### Buffer cleared buffer size: %d", this->rx_buffer_.size());
     this->rx_buffer_.clear();
   }
@@ -594,13 +594,13 @@ void JkRS485Sniffer::loop() {
       this->rx_buffer_.push_back(byte);
     }
 
-    if (this->rx_buffer_.size() >  JKPB_RS485_RESPONSE_SIZE *3)
+    if (this->rx_buffer_.size() >  JKPB_RS485_RESPONSE_SIZE *2)
     {
       ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-buffer lenght exceed");      
       this->rx_buffer_.clear();
     }
 
-    if (this->rx_buffer_.size() < 0)
+    if (this->rx_buffer_.size() <= 0)
     {
       return;
     }
