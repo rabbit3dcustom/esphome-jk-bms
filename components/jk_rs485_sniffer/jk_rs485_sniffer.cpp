@@ -600,6 +600,11 @@ void JkRS485Sniffer::loop() {
       this->rx_buffer_.clear();
     }
 
+    if (this->rx_buffer_.size() < 0)
+    {
+      return
+    }
+
     // ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
     printBuffer_segmented(this->rx_buffer_.size());    
 
