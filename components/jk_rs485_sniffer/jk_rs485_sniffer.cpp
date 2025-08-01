@@ -595,6 +595,7 @@ void JkRS485Sniffer::loop() {
     }
 
     printBuffer_segmented(this->rx_buffer_.size());   
+    this->rx_buffer_.clear();
     return;
 
     if (this->rx_buffer_.size() >  JKPB_RS485_RESPONSE_SIZE *2)
