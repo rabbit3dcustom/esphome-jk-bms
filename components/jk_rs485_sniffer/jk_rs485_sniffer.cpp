@@ -571,10 +571,10 @@ void JkRS485Sniffer::loop() {
 
   ESP_LOGVV(TAG, "JkRS485Sniffer::loop()-->");
 
-  if ( this->rx_buffer_.size() == this->rx_buffer_.max_size() ||  this->rx_buffer_.size() <= 0 ) {
-    ESP_LOGW(TAG, "JkRS485Sniffer::loop()-### Buffer cleared buffer size: %d", this->rx_buffer_.size());
-    this->rx_buffer_.clear();
-  }
+  // if ( this->rx_buffer_.size() == this->rx_buffer_.max_size() ||  this->rx_buffer_.size() <= 0 ) {
+  //   ESP_LOGW(TAG, "JkRS485Sniffer::loop()-### Buffer cleared buffer size: %d", this->rx_buffer_.size());
+  //   this->rx_buffer_.clear();
+  // }
 
   if (this->available()) {
     if ((now - this->last_jk_rs485_network_activity_) > MIN_SILENCE_MILLISECONDS) {
