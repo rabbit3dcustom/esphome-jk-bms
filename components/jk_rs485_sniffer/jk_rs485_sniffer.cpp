@@ -602,7 +602,7 @@ void JkRS485Sniffer::loop() {
 
     if (this->rx_buffer_.size() < 0)
     {
-      return
+      return;
     }
 
     // ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
