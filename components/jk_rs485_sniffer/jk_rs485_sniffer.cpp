@@ -660,6 +660,8 @@ void JkRS485Sniffer::loop() {
           ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address_old [0x%02X]", address_old);
         }
 
+        device->on_jk_rs485_sniffer_data(address, raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS], raw_copy, this->nodes_available);
+
         // this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE - 1);
         this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE);
         printBuffer_segmented(this->rx_buffer_.size());          
