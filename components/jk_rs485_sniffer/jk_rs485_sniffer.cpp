@@ -593,6 +593,13 @@ void JkRS485Sniffer::loop() {
       this->read_byte(&byte);
       this->rx_buffer_.push_back(byte);
     }
+
+    if (this->rx_buffer_.size() >  JKPB_RS485_RESPONSE_SIZE *3)
+    {
+      ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-buffer lenght exceed");      
+      this->rx_buffer_.clear();
+    }
+
     // ESP_LOGE(TAG, "JkRS485Sniffer::loop()-Getting buffer--<");
     printBuffer_segmented(this->rx_buffer_.size());    
 
@@ -660,7 +667,7 @@ void JkRS485Sniffer::loop() {
           ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: address_old [0x%02X]", address_old);
         }
 
-        device->on_jk_rs485_sniffer_data(address, raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS], raw_copy, this->nodes_available);
+        // device->on_jk_rs485_sniffer_data(address, raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS], raw_copy, this->nodes_available);
 
         // this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE - 1);
         this->rx_buffer_.erase(this->rx_buffer_.begin(), this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE);
