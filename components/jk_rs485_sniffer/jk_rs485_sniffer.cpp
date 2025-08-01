@@ -594,6 +594,9 @@ void JkRS485Sniffer::loop() {
       this->rx_buffer_.push_back(byte);
     }
 
+    printBuffer_segmented(this->rx_buffer_.size());   
+    return;
+
     if (this->rx_buffer_.size() >  JKPB_RS485_RESPONSE_SIZE *2)
     {
       ESP_LOGE(TAG, "JkRS485Sniffer::manage_rx_buffer_()-buffer lenght exceed");      
