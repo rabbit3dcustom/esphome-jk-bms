@@ -24,7 +24,9 @@ Everything you need is here!
     - Avoid downloading all the docs related to protocols
 
 ## Thanks to
+
 Txubelatxu: https://github.com/txubelaxu/esphome-jk-bms 
+
 syssi: https://github.com/syssi/esphome-jk-bms
 
 ### Support me
