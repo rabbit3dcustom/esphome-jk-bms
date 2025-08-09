@@ -18,6 +18,9 @@ Everything you need is here!
 
 ## Release versions
 
+- V1.3: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.3
+    - Bug: Alarms are again active.
+
 - V1.2: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.2
     - Improve logs: VERY_VERBOSE and INFO
     - Better frame detection
