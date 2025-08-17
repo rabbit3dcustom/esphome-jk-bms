@@ -50,6 +50,7 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
 
   void JkRS485Bms_init(void);
 
+  void printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length);
 
   void set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent);
   

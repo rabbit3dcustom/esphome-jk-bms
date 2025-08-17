@@ -2135,3 +2135,36 @@ void JkRS485Bms::dump_config() {  // NOLINT(google-readability-function-size,rea
 
 }  // namespace jk_rs485_bms
 }  // namespace esphome
+
+
+// Sobrecarga 2: Para imprimir un array de tipo uint8_t
+void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length) {
+    const int BYTES_PER_LINE = 25; 
+
+    ESP_LOGVV(TAG, "Array buffer size: %zu", buffer_size);
+
+    size_t bytes_processed = 0;
+
+    for (size_t i = 0; i < buffer_size; i += BYTES_PER_LINE) {
+        if (max_length > 0 && bytes_processed >= max_length) {
+            break; 
+        }
+
+        std::string current_line_hex;
+        current_line_hex.reserve(BYTES_PER_LINE * 3);
+
+        for (int j = 0; j < BYTES_PER_LINE; ++j) {
+            if ((i + j) < buffer_size && (max_length == 0 || (i + j) < max_length)) {
+                char hexByte[4]; 
+                sprintf(hexByte, "%02X ", buffer[i + j]);
+                current_line_hex += hexByte;
+                bytes_processed++;
+            } else {
+                break;
+            }
+        }
+        if (!current_line_hex.empty()) {
+            ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
+        }
+    }
+}
