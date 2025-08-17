@@ -565,7 +565,7 @@ void JkRS485Bms::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint1
 }
 
   // Función para imprimir el contenido de un vector de bytes de forma segmentada
-  void JkRS485Bms::print_data_segmented(const std::vector<uint8_t>& data) {
+void JkRS485Bms::print_data_segmented(const std::vector<uint8_t>& data) {
   const int BYTES_PER_LINE = 25; 
 
   ESP_LOGVV(TAG, "Data size: %zu", data.size());
@@ -581,9 +581,10 @@ void JkRS485Bms::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint1
               break;
           }
       }
+      
       ESP_LOGVV(TAG, "%s", ss_line.str().c_str());
   }
-  }
+}
 
 jk_rs485_sniffer::JkRS485Sniffer *JkRS485Bms::get_sniffer_parent(void) {
   ESP_LOGD(TAG, "Get sniffer parent");
@@ -793,7 +794,7 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
-        ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), 150).c_str());
+        ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), 308).c_str());
 
         print_data_segmented(data);
         
