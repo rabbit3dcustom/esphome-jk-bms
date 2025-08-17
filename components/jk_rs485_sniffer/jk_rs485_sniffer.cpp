@@ -1361,9 +1361,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     for (auto *device : this->devices_) {
       // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: on_jk_rs485_sniffer_data()-->");
 
-      // device->on_jk_rs485_sniffer_data(address, raw[JKPB_RS485_FRAME_TYPE_ADDRESS], data, this->nodes_available);
-
-      // device->on_jk_rs485_sniffer_data(address, raw_ptr[JKPB_RS485_FRAME_TYPE_ADDRESS], raw_copy, this->nodes_available);
+      device->on_jk_rs485_sniffer_data(address, raw[JKPB_RS485_FRAME_TYPE_ADDRESS], data, this->nodes_available);
 
       // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: on_jk_rs485_sniffer_data()--<");
 

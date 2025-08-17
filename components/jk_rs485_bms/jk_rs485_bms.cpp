@@ -650,7 +650,9 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         //   ESP_LOGVV(TAG, "frame_type: 0x01 ==========================================================================");
         //   this->decode_jk02_settings_(data);
         // }
+        
           this->decode_jk02_settings_(data);
+
         break;
       case 0x02:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data() - frame_type:  0x02");
@@ -675,7 +677,9 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
           // }
         }
         */
-          this->decode_jk02_cell_info_(data);
+          
+        //this->decode_jk02_cell_info_(data);
+
         break;
       case 0x03:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data: 0x03");
@@ -689,7 +693,9 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
-        this->decode_device_info_(data);
+        
+        //this->decode_device_info_(data);
+
         break;
       default:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data: default");
