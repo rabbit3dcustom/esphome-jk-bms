@@ -678,7 +678,7 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         }
         */
           
-        //this->decode_jk02_cell_info_(data);
+        this->decode_jk02_cell_info_(data);
 
         break;
       case 0x03:
@@ -694,7 +694,7 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
         
-        //this->decode_device_info_(data);
+        this->decode_device_info_(data);
 
         break;
       default:
