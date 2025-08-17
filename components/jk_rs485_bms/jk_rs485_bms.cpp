@@ -484,6 +484,7 @@ void JkRS485Bms::set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent) {
     ESP_LOGD(TAG, "Setting parent");
   }
   this->parent_ = parent;
+}
 
 
 // Sobrecarga 2: Para imprimir un array de tipo uint8_t
@@ -516,7 +517,8 @@ void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size
             ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
         }
     }
-}}
+}
+
 
 jk_rs485_sniffer::JkRS485Sniffer *JkRS485Bms::get_sniffer_parent(void) {
   ESP_LOGD(TAG, "Get sniffer parent");
