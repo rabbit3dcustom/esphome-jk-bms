@@ -519,6 +519,50 @@ void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size
     }
 }
 
+// Sobrecarga: Para imprimir un array de tipo vector
+void JkRS485Sniffer::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint16_t max_length) {
+    // Definimos el ancho máximo de la línea de salida.
+    const int BYTES_PER_LINE = 25; 
+
+    // Imprimimos la cabecera del log una vez
+    ESP_LOGVV(TAG, "Buffer size: %zu", buffer.size());
+
+    // Variable para controlar cuántos bytes hemos procesado
+    size_t bytes_processed = 0;
+
+    // Iteramos sobre el buffer de bytes
+    for (size_t i = 0; i < buffer.size(); ++i) {
+        // Si se especificó un max_length y ya lo hemos alcanzado, salimos del bucle.
+        if (max_length > 0 && bytes_processed >= max_length) {
+            break; 
+        }
+
+        // Si es el inicio de una nueva línea (o la primera línea)
+        if (i % BYTES_PER_LINE == 0) {
+            // Creamos un string para la línea actual de HEX
+            std::string current_line_hex;
+            current_line_hex.reserve(BYTES_PER_LINE * 3); // Aprox. 2 chars + espacio por byte
+
+            // Iteramos para construir la línea actual de HEX
+            for (int j = 0; j < BYTES_PER_LINE; ++j) {
+                // Verificamos si aún estamos dentro de los límites del buffer y de max_length.
+                if ((i + j) < buffer.size() && (max_length == 0 || (i + j) < max_length)) {
+                    // Usamos std::stringstream para una construcción de string más segura y eficiente
+                    char hexByte[4]; 
+                    sprintf(hexByte, "%02X ", buffer[i + j]);
+                    current_line_hex += hexByte;
+                    bytes_processed++;
+                } else {
+                    break; // Salir si excedemos el tamaño del buffer o max_length
+                }
+            }
+            // Imprimimos la línea de HEX completa
+            if (!current_line_hex.empty()) {
+                ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
+            }
+        }
+    }
+}
 
 jk_rs485_sniffer::JkRS485Sniffer *JkRS485Bms::get_sniffer_parent(void) {
   ESP_LOGD(TAG, "Get sniffer parent");
@@ -728,6 +772,8 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
+
+        printBuffer_segmented(this->data.size());
         
         this->decode_device_info_(data);
 
