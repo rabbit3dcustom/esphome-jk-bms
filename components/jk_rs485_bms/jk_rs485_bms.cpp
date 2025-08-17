@@ -566,7 +566,7 @@ void JkRS485Bms::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint1
 
   // Función para imprimir el contenido de un vector de bytes de forma segmentada
 void JkRS485Bms::print_data_segmented(const std::vector<uint8_t>& data) {
-  const int BYTES_PER_LINE = 25; 
+  const int BYTES_PER_LINE = 50; 
 
   ESP_LOGVV(TAG, "Data size: %zu", data.size());
 
@@ -581,7 +581,7 @@ void JkRS485Bms::print_data_segmented(const std::vector<uint8_t>& data) {
               break;
           }
       }
-      
+
       ESP_LOGVV(TAG, "%s", ss_line.str().c_str());
   }
 }
