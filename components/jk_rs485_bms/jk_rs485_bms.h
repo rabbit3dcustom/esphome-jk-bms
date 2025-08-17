@@ -8,6 +8,12 @@
 #include "../jk_rs485_sniffer/jk_rs485_sniffer.h"
 //#include "esphome/core/component.h"
 
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iomanip>
+
 float uint32_to_float(const uint8_t* byteArray);
 float int32_to_float(const uint8_t* byteArray);
 float uint16_to_float(const uint8_t *byteArray);
