@@ -520,7 +520,7 @@ void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size
 }
 
 // Sobrecarga: Para imprimir un array de tipo vector
-void JkRS485Sniffer::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint16_t max_length) {
+void JkRS485Bms::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint16_t max_length) {
     // Definimos el ancho máximo de la línea de salida.
     const int BYTES_PER_LINE = 25; 
 
