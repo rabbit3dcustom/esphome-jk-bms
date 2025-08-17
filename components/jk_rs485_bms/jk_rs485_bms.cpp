@@ -476,6 +476,16 @@ static const char *const BATTERY_TYPES[BATTERY_TYPES_SIZE] = {
 };
 
 
+// void JkRS485Bms::set_parent(JkRS485Sniffer *parent) {
+void JkRS485Bms::set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent) {
+  if (parent == nullptr) {
+    ESP_LOGE(TAG, "Trying to set parent to null");
+  } else {
+    ESP_LOGD(TAG, "Setting parent");
+  }
+  this->parent_ = parent;
+
+
 // Sobrecarga 2: Para imprimir un array de tipo uint8_t
 void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length) {
     const int BYTES_PER_LINE = 25; 
@@ -506,17 +516,7 @@ void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size
             ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
         }
     }
-}
-
-// void JkRS485Bms::set_parent(JkRS485Sniffer *parent) {
-void JkRS485Bms::set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent) {
-  if (parent == nullptr) {
-    ESP_LOGE(TAG, "Trying to set parent to null");
-  } else {
-    ESP_LOGD(TAG, "Setting parent");
-  }
-  this->parent_ = parent;
-}
+}}
 
 jk_rs485_sniffer::JkRS485Sniffer *JkRS485Bms::get_sniffer_parent(void) {
   ESP_LOGD(TAG, "Get sniffer parent");

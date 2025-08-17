@@ -661,8 +661,6 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
 
   //bool write_register(uint8_t address, uint32_t value, uint8_t length);
 
-  void printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length);
-
  protected:
   jk_rs485_sniffer::JkRS485Sniffer *parent_;
   ProtocolVersion protocol_version_{PROTOCOL_VERSION_JK02_32S};
@@ -713,6 +711,8 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
   void decode_jk02_cell_info_(const std::vector<uint8_t> &data);
   void decode_jk02_settings_(const std::vector<uint8_t> &data);
   void decode_device_info_(const std::vector<uint8_t> &data);
+
+    void printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length);
 
   std::string error_bits_to_string_(uint32_t bitmask);
   std::string mode_bits_to_string_(uint16_t bitmask);
