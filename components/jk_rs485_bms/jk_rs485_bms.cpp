@@ -793,8 +793,9 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
         ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
+        ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), 150).c_str());
 
-         print_data_segmented(data);
+        print_data_segmented(data);
         
         this->decode_device_info_(data);
 
