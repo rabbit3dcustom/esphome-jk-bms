@@ -714,6 +714,7 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
 
   void printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length);
   void printBuffer_segmented(const std::vector<uint8_t>& buffer, uint16_t max_length);
+  void print_data_segmented(const std::vector<uint8_t>& data);
 
   std::string error_bits_to_string_(uint32_t bitmask);
   std::string mode_bits_to_string_(uint16_t bitmask);
