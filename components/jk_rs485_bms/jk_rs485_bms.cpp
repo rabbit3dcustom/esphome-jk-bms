@@ -1813,6 +1813,13 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
 
   ESP_LOGVV(TAG, "  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
+  ESP_LOGVV(TAG, "  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
+  ESP_LOGVV(TAG, "  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
+  ESP_LOGVV(TAG, "  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
+  ESP_LOGVV(TAG, "  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
+  ESP_LOGVV(TAG, "  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
+  ESP_LOGVV(TAG, "  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+  
   this->publish_state_(this->info_vendorid_text_sensor_, std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
   /*  
   this->publish_state_(this->info_hardware_version_text_sensor_, std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
