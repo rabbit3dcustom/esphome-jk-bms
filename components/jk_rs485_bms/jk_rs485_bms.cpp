@@ -1821,11 +1821,13 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   this->publish_state_(this->info_device_serial_number_text_sensor_, std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
   this->publish_state_(this->info_device_setup_passcode_text_sensor_, std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
 */
+/*
   this->publish_state_(this->uart1_protocol_number_sensor_, (uint8_t) data[178]);
   this->publish_state_(this->uart2_protocol_number_sensor_, (uint8_t) data[212]);
 
   this->publish_state_(this->cell_request_charge_voltage_time_number_, (float) data[266] * 0.1f);
   this->publish_state_(this->cell_request_float_voltage_time_number_, (float) data[267] * 0.1f);
+  */
 
   this->trigger_bms2sniffer_event("WORKING ! #####", 03);
 }
