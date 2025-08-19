@@ -1766,6 +1766,12 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
 void JkRS485Bms::update() { this->track_status_online_(); }
 
 void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
+
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-->");
+
+
+  ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
+
   ESP_LOGI(TAG, "Device info frame (%d bytes) received", data.size());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 160).c_str());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
@@ -1777,6 +1783,9 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   ESP_LOGVV(TAG, "password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
   ESP_LOGVV(TAG, "serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
   ESP_LOGVV(TAG, "passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+
+  ESP_LOGVV(TAG, "charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
+  ESP_LOGVV(TAG, "float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
 
   this->publish_state_(this->info_vendorid_text_sensor_, std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
   /*  
@@ -1796,6 +1805,9 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   */
 
   this->trigger_bms2sniffer_event("WORKING ! #####", 03);
+
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()--<");
+
 }
 
 void JkRS485Bms::track_status_online_() {
