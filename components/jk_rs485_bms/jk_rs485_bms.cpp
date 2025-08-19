@@ -1769,40 +1769,36 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
 
   ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-->");
 
-
-  ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
 
   ESP_LOGI(TAG, "Device info frame (%d bytes) received", data.size());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 160).c_str());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
 
-  ESP_LOGVV(TAG, "vendorid  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
-  ESP_LOGVV(TAG, "hardware  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
-  ESP_LOGVV(TAG, "software  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
-  ESP_LOGVV(TAG, "name  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
-  ESP_LOGVV(TAG, "password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
-  ESP_LOGVV(TAG, "serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
-  ESP_LOGVV(TAG, "passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-vendorid  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-hardware  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-software  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-name  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
 
-  ESP_LOGVV(TAG, "charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
-  ESP_LOGVV(TAG, "float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
 
   this->publish_state_(this->info_vendorid_text_sensor_, std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
-  /*  
   this->publish_state_(this->info_hardware_version_text_sensor_, std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
   this->publish_state_(this->info_software_version_text_sensor_, std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
   this->publish_state_(this->info_device_name_text_sensor_, std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
   this->publish_state_(this->info_device_password_text_sensor_, std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
   this->publish_state_(this->info_device_serial_number_text_sensor_, std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
   this->publish_state_(this->info_device_setup_passcode_text_sensor_, std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
-*/
-/*
+
   this->publish_state_(this->uart1_protocol_number_sensor_, (uint8_t) data[178]);
   this->publish_state_(this->uart2_protocol_number_sensor_, (uint8_t) data[212]);
 
   this->publish_state_(this->cell_request_charge_voltage_time_number_, (float) data[266] * 0.1f);
   this->publish_state_(this->cell_request_float_voltage_time_number_, (float) data[267] * 0.1f);
-  */
 
   this->trigger_bms2sniffer_event("WORKING ! #####", 03);
 
