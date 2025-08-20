@@ -1575,7 +1575,7 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
   this->publish_state_(this->discharging_switch_, (bool) data[122]);
 
   // 126 [120 = 0x78]  4   0x01 0x00 0x00 0x00    Balancer switch
-  ESP_LOGI(TAG, "  Balancer switch: %s", ((bool) data[126]) ? "on" : "off");
+  ESP_LOGV(TAG, "  Balancer switch: %s", ((bool) data[126]) ? "on" : "off");
   // 02.10.10.78.00.02.04.00.00.00.00.37.A9
   // 02.10.10.78.00.02.04.00.00.00.01.F6.69.
   ESP_LOGV(TAG, " [0x%02X]* balancer_switch_                                     is byte %02X address %p",
@@ -1649,7 +1649,7 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
   // 274 [268]  4   0x00 0x00 0x00 0x00    TIMProdischarge: Discharge pre-charging time
   // ESP_LOGI(TAG, "         274: %02X%02X%02X%02X",data[274],data[275],data[276],data[277]);
   temp_param_value = uint32_to_float(&data[274]);
-  ESP_LOGI(TAG, "  Precharging time from discharged: %f s",
+  ESP_LOGV(TAG, "  Precharging time from discharged: %f s",
            temp_param_value);  ///(float) ((int32_t) jk_get_32bit(274)));
   this->publish_state_(this->precharging_time_from_discharge_number_,
                        temp_param_value);  ///(float) ((int32_t) jk_get_32bit(274)));
@@ -1775,16 +1775,16 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 160).c_str());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
 
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-vendorid  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-hardware  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-software  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-name  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-vendorid  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-hardware  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-software  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-name  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
 
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
-  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
 
   this->publish_state_(this->info_vendorid_text_sensor_, std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
   this->publish_state_(this->info_hardware_version_text_sensor_, std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
