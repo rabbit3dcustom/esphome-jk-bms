@@ -18,11 +18,24 @@ Everything you need is here!
 
 ## Release versions
 
+- V1.3: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.3
+    - Bug: Alarms are again active.
+
+- V1.2: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.2
+    - Improve logs: VERY_VERBOSE and INFO
+    - Better frame detection
+    - Fast response to esphome
+
 - V1.0: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v.1.0 
     - Clean non mandatory files.
     - Avoid downloading the home assistant dashboards into the ESP32 compilation
     - Avoid downloading all the docs related to protocols
 
+## Thanks to
+
+Txubelatxu: https://github.com/txubelaxu/esphome-jk-bms 
+
+syssi: https://github.com/syssi/esphome-jk-bms
 
 ### Support me
 

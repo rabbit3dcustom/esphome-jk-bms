@@ -475,6 +475,7 @@ static const char *const BATTERY_TYPES[BATTERY_TYPES_SIZE] = {
     "Lithium Titanate",        // 0x02
 };
 
+
 // void JkRS485Bms::set_parent(JkRS485Sniffer *parent) {
 void JkRS485Bms::set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent) {
   if (parent == nullptr) {
@@ -483,6 +484,106 @@ void JkRS485Bms::set_sniffer_parent(jk_rs485_sniffer::JkRS485Sniffer *parent) {
     ESP_LOGD(TAG, "Setting parent");
   }
   this->parent_ = parent;
+}
+
+
+// Sobrecarga 2: Para imprimir un array de tipo uint8_t
+void JkRS485Bms::printBuffer_segmented(const uint8_t* buffer, size_t buffer_size, uint16_t max_length) {
+    const int BYTES_PER_LINE = 25; 
+
+    ESP_LOGVV(TAG, "Array buffer size: %zu", buffer_size);
+
+    size_t bytes_processed = 0;
+
+    for (size_t i = 0; i < buffer_size; i += BYTES_PER_LINE) {
+        if (max_length > 0 && bytes_processed >= max_length) {
+            break; 
+        }
+
+        std::string current_line_hex;
+        current_line_hex.reserve(BYTES_PER_LINE * 3);
+
+        for (int j = 0; j < BYTES_PER_LINE; ++j) {
+            if ((i + j) < buffer_size && (max_length == 0 || (i + j) < max_length)) {
+                char hexByte[4]; 
+                sprintf(hexByte, "%02X ", buffer[i + j]);
+                current_line_hex += hexByte;
+                bytes_processed++;
+            } else {
+                break;
+            }
+        }
+        if (!current_line_hex.empty()) {
+            ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
+        }
+    }
+}
+
+// Sobrecarga: Para imprimir un array de tipo vector
+void JkRS485Bms::printBuffer_segmented(const std::vector<uint8_t>& buffer, uint16_t max_length) {
+    // Definimos el ancho máximo de la línea de salida.
+    const int BYTES_PER_LINE = 25; 
+
+    // Imprimimos la cabecera del log una vez
+    ESP_LOGVV(TAG, "Buffer size: %zu", buffer.size());
+
+    // Variable para controlar cuántos bytes hemos procesado
+    size_t bytes_processed = 0;
+
+    // Iteramos sobre el buffer de bytes
+    for (size_t i = 0; i < buffer.size(); ++i) {
+        // Si se especificó un max_length y ya lo hemos alcanzado, salimos del bucle.
+        if (max_length > 0 && bytes_processed >= max_length) {
+            break; 
+        }
+
+        // Si es el inicio de una nueva línea (o la primera línea)
+        if (i % BYTES_PER_LINE == 0) {
+            // Creamos un string para la línea actual de HEX
+            std::string current_line_hex;
+            current_line_hex.reserve(BYTES_PER_LINE * 3); // Aprox. 2 chars + espacio por byte
+
+            // Iteramos para construir la línea actual de HEX
+            for (int j = 0; j < BYTES_PER_LINE; ++j) {
+                // Verificamos si aún estamos dentro de los límites del buffer y de max_length.
+                if ((i + j) < buffer.size() && (max_length == 0 || (i + j) < max_length)) {
+                    // Usamos std::stringstream para una construcción de string más segura y eficiente
+                    char hexByte[4]; 
+                    sprintf(hexByte, "%02X ", buffer[i + j]);
+                    current_line_hex += hexByte;
+                    bytes_processed++;
+                } else {
+                    break; // Salir si excedemos el tamaño del buffer o max_length
+                }
+            }
+            // Imprimimos la línea de HEX completa
+            if (!current_line_hex.empty()) {
+                ESP_LOGVV(TAG, "    %s", current_line_hex.c_str());
+            }
+        }
+    }
+}
+
+  // Función para imprimir el contenido de un vector de bytes de forma segmentada
+void JkRS485Bms::print_data_segmented(const std::vector<uint8_t>& data) {
+  const int BYTES_PER_LINE = 50; 
+
+  ESP_LOGVV(TAG, "Data size: %zu", data.size());
+
+  for (size_t i = 0; i < data.size(); i += BYTES_PER_LINE) {
+      std::stringstream ss_line;
+      ss_line << "    "; // Indentación
+
+      for (size_t j = 0; j < BYTES_PER_LINE; ++j) {
+          if (i + j < data.size()) {
+              ss_line << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(data[i + j]) << " ";
+          } else {
+              break;
+          }
+      }
+
+      ESP_LOGVV(TAG, "%s", ss_line.str().c_str());
+  }
 }
 
 jk_rs485_sniffer::JkRS485Sniffer *JkRS485Bms::get_sniffer_parent(void) {
@@ -640,56 +741,23 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
     switch (frame_type) {
       case 0x01:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data() - frame_type:  0x01");
-        // if (this->protocol_version_ == PROTOCOL_VERSION_JK04) {
-        //   ESP_LOGVV(TAG, "frame_type: 0x01 and PROTOCOL_VERSION_JK04 => commented decode_jk04_settings_()");
-        //   // this->decode_jk04_settings_(data);
-        // } else {
-        //   ESP_LOGVV(TAG, "frame_type: 0x01 and not PROTOCOL_VERSION_JK04 => decode_jk02_settings_()");
-        //   ESP_LOGVV(TAG, "frame_type: 0x01 ==========================================================================");
-        //   ESP_LOGVV(TAG, "frame_type: 0x01 =============================START 0x01===================================");
-        //   ESP_LOGVV(TAG, "frame_type: 0x01 ==========================================================================");
-        //   this->decode_jk02_settings_(data);
-        // }
+        
           this->decode_jk02_settings_(data);
+
         break;
       case 0x02:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data() - frame_type:  0x02");
-        /*
-        if (this->protocol_version_ == PROTOCOL_VERSION_JK04) {
-          ESP_LOGVV(TAG, "frame_type: 0x02 and PROTOCOL_VERSION_JK04 => commented decode_jk04_cell_info_()");
-          // this->decode_jk04_cell_info_(data);
-        } else {
-          ESP_LOGVV(TAG, "frame_type: 0x02 and not PROTOCOL_VERSION_JK04");
+          
+        this->decode_jk02_cell_info_(data);
 
-          // if (this->cell_count_settings_number_->state>0)
-          // {
-          ESP_LOGVV(TAG, "on_jk_rs485_sniffer_data: 0x02 - cell_count_settings_number_ ");
-          ESP_LOGVV(TAG, "frame_type: 0x02 and not PROTOCOL_VERSION_JK04 => decode_jk02_cell_info_()");
-          ESP_LOGVV(TAG, "frame_type: 0x02 ==========================================================================");
-          ESP_LOGVV(TAG, "frame_type: 0x02 =============================START 0x02===================================");
-          ESP_LOGVV(TAG, "frame_type: 0x02 ==========================================================================");
-          this->decode_jk02_cell_info_(data);
-          // } else {
-          //   ESP_LOGI(TAG, "Frame type 0x%02X received from address 0x%02X. But 0x01 frame type must be processed
-          //   first", frame_type,origin_address);
-          // }
-        }
-        */
-          this->decode_jk02_cell_info_(data);
         break;
       case 0x03:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data: 0x03");
 
-        ESP_LOGI(TAG, "Decoding DEVICE "
-                      "info............................................................"
-                      "................................................................");
-
-        ESP_LOGVV(TAG, "frame_type: 0x03 => decode_device_info_()");
-        ESP_LOGVV(TAG, "frame_type: 0x03 ALL PROTOCOLS => decode_device_info_()");
-        ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
-        ESP_LOGVV(TAG, "frame_type: 0x03 =============================START 0x03===================================");
-        ESP_LOGVV(TAG, "frame_type: 0x03 ==========================================================================");
+        printBuffer_segmented(data, data.size());
+        
         this->decode_device_info_(data);
+
         break;
       default:
         ESP_LOGD(TAG, "on_jk_rs485_sniffer_data: default");
@@ -726,12 +794,17 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
   // }
   // this->last_cell_info_ = now;
 
-  uint8_t frame_version = PROTOCOL_VERSION_JK02_32S;
+  // uint8_t frame_version = FRAME_VERSION_JK02_24S;
+  // uint8_t offset = 0;
+  // if (this->protocol_version_ == PROTOCOL_VERSION_JK02_32S) {
+  //   frame_version = FRAME_VERSION_JK02_32S;
+  //   offset = 16;
+  // }
 
+  uint8_t frame_version = FRAME_VERSION_JK02_32S;
   uint8_t offset = 16;
-
-  ESP_LOGD(TAG, "Decoding cell info frame.... [ADDRESS: %02X] %d bytes received", this->address_, data.size());
-
+ 
+  // ESP_LOGD(TAG, "Decoding cell info frame.... [ADDRESS: %02X] %d bytes received", this->address_, data.size());
   ESP_LOGI(TAG, "Decoding cell info frame.... [ADDRESS: %02X] %d bytes received", this->address_, data.size());
 
   // ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 150).c_str());
@@ -1502,7 +1575,7 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
   this->publish_state_(this->discharging_switch_, (bool) data[122]);
 
   // 126 [120 = 0x78]  4   0x01 0x00 0x00 0x00    Balancer switch
-  ESP_LOGI(TAG, "  Balancer switch: %s", ((bool) data[126]) ? "on" : "off");
+  ESP_LOGV(TAG, "  Balancer switch: %s", ((bool) data[126]) ? "on" : "off");
   // 02.10.10.78.00.02.04.00.00.00.00.37.A9
   // 02.10.10.78.00.02.04.00.00.00.01.F6.69.
   ESP_LOGV(TAG, " [0x%02X]* balancer_switch_                                     is byte %02X address %p",
@@ -1576,7 +1649,7 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
   // 274 [268]  4   0x00 0x00 0x00 0x00    TIMProdischarge: Discharge pre-charging time
   // ESP_LOGI(TAG, "         274: %02X%02X%02X%02X",data[274],data[275],data[276],data[277]);
   temp_param_value = uint32_to_float(&data[274]);
-  ESP_LOGI(TAG, "  Precharging time from discharged: %f s",
+  ESP_LOGV(TAG, "  Precharging time from discharged: %f s",
            temp_param_value);  ///(float) ((int32_t) jk_get_32bit(274)));
   this->publish_state_(this->precharging_time_from_discharge_number_,
                        temp_param_value);  ///(float) ((int32_t) jk_get_32bit(274)));
@@ -1693,23 +1766,33 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
 void JkRS485Bms::update() { this->track_status_online_(); }
 
 void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
+
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-->");
+
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
+
   ESP_LOGI(TAG, "Device info frame (%d bytes) received", data.size());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 160).c_str());
   ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 160, data.size() - 160).c_str());
 
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-vendorid  %s", std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-hardware  %s", std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-software  %s", std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-name  %s", std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-password  %s", std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-serial_number  %s",  std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-passcode  %s",  std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-charge_voltage_time  %0.1f",  (float) data[266] * 0.1f);
+  // ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()-float_voltage_time  %0.1f",  (float) data[267] * 0.1f);
+
   this->publish_state_(this->info_vendorid_text_sensor_, std::string(data.begin() + 6, data.begin() + 6 + 16).c_str());
-  this->publish_state_(this->info_hardware_version_text_sensor_,
-                       std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
-  this->publish_state_(this->info_software_version_text_sensor_,
-                       std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
-  this->publish_state_(this->info_device_name_text_sensor_,
-                       std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
-  this->publish_state_(this->info_device_password_text_sensor_,
-                       std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
-  this->publish_state_(this->info_device_serial_number_text_sensor_,
-                       std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
-  this->publish_state_(this->info_device_setup_passcode_text_sensor_,
-                       std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
+  this->publish_state_(this->info_hardware_version_text_sensor_, std::string(data.begin() + 22, data.begin() + 22 + 8).c_str());
+  this->publish_state_(this->info_software_version_text_sensor_, std::string(data.begin() + 30, data.begin() + 30 + 8).c_str());
+  this->publish_state_(this->info_device_name_text_sensor_, std::string(data.begin() + 46, data.begin() + 46 + 16).c_str());
+  this->publish_state_(this->info_device_password_text_sensor_, std::string(data.begin() + 62, data.begin() + 62 + 16).c_str());
+  this->publish_state_(this->info_device_serial_number_text_sensor_, std::string(data.begin() + 86, data.begin() + 86 + 11).c_str());
+  this->publish_state_(this->info_device_setup_passcode_text_sensor_, std::string(data.begin() + 118, data.begin() + 118 + 16).c_str());
 
   this->publish_state_(this->uart1_protocol_number_sensor_, (uint8_t) data[178]);
   this->publish_state_(this->uart2_protocol_number_sensor_, (uint8_t) data[212]);
@@ -1718,6 +1801,9 @@ void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
   this->publish_state_(this->cell_request_float_voltage_time_number_, (float) data[267] * 0.1f);
 
   this->trigger_bms2sniffer_event("WORKING ! #####", 03);
+
+  ESP_LOGVV(TAG, "JkRS485Bms::decode_device_info_()--<");
+
 }
 
 void JkRS485Bms::track_status_online_() {
@@ -2124,3 +2210,4 @@ void JkRS485Bms::dump_config() {  // NOLINT(google-readability-function-size,rea
 
 }  // namespace jk_rs485_bms
 }  // namespace esphome
+
