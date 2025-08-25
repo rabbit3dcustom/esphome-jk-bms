@@ -18,6 +18,10 @@ Everything you need is here!
 
 ## Release versions
 
+- V1.4: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.4
+    - Refactoring code.
+    - Tested on JK-PB v19 fw:19.03
+
 - V1.3: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.3
     - Bug: Alarms are again active.
 
