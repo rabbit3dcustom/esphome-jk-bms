@@ -90,23 +90,23 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
             JkRS485BmsSwitch,
             icon=ICON_CHARGING,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_CHARGING): switch.switch_schame(
+        cv.Optional(CONF_CHARGING): switch.switch_schema(
             JkRS485BmsSwitch,
             icon=ICON_CHARGING,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_DISCHARGING): switch.switch_schame(
+        cv.Optional(CONF_DISCHARGING): switch.switch_schema(
             JkRS485BmsSwitch,
             icon=ICON_DISCHARGING,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_BALANCING): switch.switch_schame(
+        cv.Optional(CONF_BALANCING): switch.switch_schema(
             JkRS485BmsSwitch,
             icon=ICON_BALANCING,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_EMERGENCY): switch.switch_schame(
+        cv.Optional(CONF_EMERGENCY): switch.switch_schema(
             JkRS485BmsSwitch,
             icon=ICON_EMERGENCY,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_HEATING): switch.switch_schame(
+        cv.Optional(CONF_HEATING): switch.switch_schema(
             JkRS485BmsSwitch,
             icon=ICON_HEATING,
         ).extend(cv.COMPONENT_SCHEMA),
