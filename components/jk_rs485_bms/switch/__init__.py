@@ -110,61 +110,41 @@ CONFIG_SCHEMA = JK_RS485_BMS_COMPONENT_SCHEMA.extend(
             JkRS485BmsSwitch,
             icon=ICON_HEATING,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_DISABLE_TEMPERATURE_SENSORS): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(
-                    CONF_ICON, default=ICON_DISABLE_TEMPERATURE_SENSORS
-                ): cv.icon,
-            }
+        cv.Optional(CONF_DISABLE_TEMPERATURE_SENSORS): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISABLE_TEMPERATURE_SENSORS,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_DISPLAY_ALWAYS_ON): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISPLAY_ALWAYS_ON): cv.icon,
-            }
+        cv.Optional(CONF_DISPLAY_ALWAYS_ON): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISPLAY_ALWAYS_ON,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_SMART_SLEEP_ON): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_SMART_SLEEP_ON): cv.icon,
-            }
+        cv.Optional(CONF_SMART_SLEEP_ON): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_SMART_SLEEP_ON,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_TIMED_STORED_DATA): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_TIMED_STORED_DATA): cv.icon,
-            }
+        cv.Optional(CONF_TIMED_STORED_DATA): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_TIMED_STORED_DATA,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_CHARGING_FLOAT_MODE): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_CHARGING_FLOAT_MODE): cv.icon,
-            }
+        cv.Optional(CONF_CHARGING_FLOAT_MODE): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_CHARGING_FLOAT_MODE,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_DISABLE_PCL_MODULE): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISABLE_PCL_MODULE): cv.icon,
-            }
+        cv.Optional(CONF_DISABLE_PCL_MODULE): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISABLE_PCL_MODULE,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_GPS_HEARTBEAT): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISABLE_PCL_MODULE): cv.icon,
-            }
+        cv.Optional(CONF_GPS_HEARTBEAT): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISABLE_PCL_MODULE,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_PORT_SELECTION): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISABLE_PCL_MODULE): cv.icon,
-            }
+        cv.Optional(CONF_PORT_SELECTION): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISABLE_PCL_MODULE,
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_SPECIAL_CHARGER): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(JkRS485BmsSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISABLE_PCL_MODULE): cv.icon,
-            }
+        cv.Optional(CONF_SPECIAL_CHARGER): switch.switch_schema(
+            JkRS485BmsSwitch,
+            icon=ICON_DISABLE_PCL_MODULE,
         ).extend(cv.COMPONENT_SCHEMA),
     }
 )
