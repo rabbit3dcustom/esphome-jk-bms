@@ -1110,7 +1110,6 @@ void JkRS485Sniffer::detected_master_activity_now(void) {
 }
 
 uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
-  const uint8_t *raw = &this->rx_buffer_[0];
   uint8_t address = 0;
   
   const uint32_t now = millis();
@@ -1120,7 +1119,13 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
   ESP_LOGV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-[buffer: %d bytes]",this->rx_buffer_.size());
 
+  if (this->rx_buffer_.empty()) {
+    ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-Return 5 (empty buffer)");
+    return(5);
+  }
+
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_SHORT_REQUEST_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
     
     if (it == this->rx_buffer_.end()) {
@@ -1162,6 +1167,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
   }
 
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_REQUEST_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
     bool try_with_master_request_size = false;
 
@@ -1277,6 +1283,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()- before JKPB_RS485_RESPONSE_SIZE 2 - address [0x%02X]", address);        
 
   if (this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE 2");
 
     uint8_t computed_checksum = chksum(raw, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);

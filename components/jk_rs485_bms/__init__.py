@@ -19,7 +19,7 @@ CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(JkRS485Bms),
-            cv.Required(CONF_RS485_ADDRESS): cv.int_,
+            cv.Required(CONF_RS485_ADDRESS): cv.int_range(min=1, max=15),
         }
     )
     .extend(cv.polling_component_schema("5s"))
