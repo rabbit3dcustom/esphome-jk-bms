@@ -735,17 +735,6 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
   this->publish_state_(this->cell_resistance_min_cell_number_sensor_, (float) cell_resistance_min_cell_number + 1);
   ESP_LOGVV(TAG, "Debug point 002");
 
-  if (this->arr[1] == 0) {
-    this->arr[1] = 1;
-  } else {
-    if (this->arr[1] == 1) {
-      this->arr[1] = 2;
-    } else {
-      this->arr[1] = 0;
-    }
-  }
-  ESP_LOGD(TAG, " array 1 = %d", arr[1]);
-
   // ESP_LOGV(TAG, "Cell MAX voltage:    %f", cell_voltage_max);
   // ESP_LOGV(TAG, "Cell MAX voltage:    %f", cell_voltage_min);
 
@@ -760,10 +749,8 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
   // ESP_LOGV(TAG, "Enabled cells bitmask: 0x%02X 0x%02X 0x%02X 0x%02X", data[54 + offset], data[55 + offset],data[56
   // + offset], data[57 + offset]);
 
-  if (this->arr[1] == 0) {
-    ESP_LOGD(TAG, " ===============================================================================================");
-    ESP_LOGD(TAG, " if (this->arr[1] == 0)");
-    ESP_LOGD(TAG, " if (this->arr[1] == 0) - offset: %d) ", offset);
+  ESP_LOGD(TAG, " ===============================================================================================");
+  ESP_LOGD(TAG, " block A - offset: %d) ", offset);
 
     // 58    2   0x00 0x0D              cell average voltage  0.001        V
     this->publish_state_(this->cell_average_voltage_sensor_,
@@ -889,12 +876,8 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
           int16_to_float(&data[134 + offset]) * 0.1f);  //  (float) ((int16_t) jk_get_16bit(134 + offset)) * 0.1f);
     }
 
-  } else {
-    if (this->arr[1] == 1) {
       ESP_LOGD(TAG, " ===============================================================================================");
-
-      ESP_LOGD(TAG, " if (this->arr[1] == 1)");
-      ESP_LOGD(TAG, " if (this->arr[1] == 1) - offset: %d) ", offset);
+      ESP_LOGD(TAG, " block B - offset: %d) ", offset);
 
       offset = offset * 2;
 
@@ -992,13 +975,12 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
       this->publish_state_(this->battery_soh_valuation_sensor_,
                            temp_param_value);  //  (float) jk_get_32bit(158 + offset));
 
-    } else {
       ESP_LOGD(TAG, " ===============================================================================================");
-      ESP_LOGD(TAG, " if (this->arr[1] == 2)");
+      ESP_LOGD(TAG, " block C");
 
       offset = offset * 2;  // Copy the offset from the previous conditional.
 
-      ESP_LOGD(TAG, " if (this->arr[1] == 2) - offset: %d) ", offset);
+      ESP_LOGD(TAG, " block C - offset: %d) ", offset);
 
       // 159  [185=159+26]  1   0x00                   Precharge
       // ESP_LOGV(TAG, "Precharge: 0x%02X (always 0x00?)", data[159 + offset]);
@@ -1156,9 +1138,6 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
         this->publish_state_(this->battery_total_alarms_count_sensor_, (float) this->battery_total_alarms_count_);
         this->publish_state_(this->battery_total_alarms_active_sensor_, (float) this->battery_total_alarms_active_);
       }
-    } /* else (this->arr[1] == */
-  } /* if (this->arr[1] == */
-
   this->status_notification_received_ = true;
   this->trigger_bms2sniffer_event("WORKING ! #####", 02);
 }
