@@ -876,10 +876,9 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
           int16_to_float(&data[134 + offset]) * 0.1f);  //  (float) ((int16_t) jk_get_16bit(134 + offset)) * 0.1f);
     }
 
-      ESP_LOGD(TAG, " ===============================================================================================");
-      ESP_LOGD(TAG, " block B - offset: %d) ", offset);
-
-      offset = offset * 2;
+      // ESP_LOGD(TAG, " ===============================================================================================");
+      // ESP_LOGD(TAG, " block B - offset: %d) ", offset);
+      // offset = offset * 2;
 
       // 135 [161=135+26]   2   0xD2        Alarms      bit
       // AlarmChOTP                  1   (0:normal | 1:alarm)
@@ -977,7 +976,6 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
 
       // ESP_LOGD(TAG, " ===============================================================================================");
       // ESP_LOGD(TAG, " block C");
-
       // //offset = offset * 2;  // Copy the offset from the previous conditional.
 
       // ESP_LOGD(TAG, " block C - offset: %d) ", offset);
