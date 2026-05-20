@@ -13,6 +13,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <unordered_map>
 
 float uint32_to_float(const uint8_t* byteArray);
 float int32_to_float(const uint8_t* byteArray);
@@ -701,12 +702,14 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
   void publish_state_(JkRS485BmsNumber *number, float value);  
   void publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state);
   void publish_alarm_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);  
+  bool should_publish_now_(uintptr_t key, uint32_t interval_ms, bool force_publish = false);
   void publish_device_unavailable_();
   void reset_status_online_tracker_();
   void track_status_online_();
 
 
   bool status_notification_received_ = false;
+  std::unordered_map<uintptr_t, uint32_t> last_publish_millis_;
 
   uint32_t last_cell_info_{0};
   uint32_t throttle_{0};
