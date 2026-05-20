@@ -217,9 +217,9 @@ void JkRS485Bms::set_cell_request_float_voltage_time_number(JkRS485BmsNumber *ce
 }
 
 static const char *const TAG = "jk_rs485_bms";
-static const uint32_t SENSOR_PUBLISH_INTERVAL_MS = 10000;
-static const uint32_t NUMBER_PUBLISH_INTERVAL_MS = 10000;
-static const uint32_t TEXT_PUBLISH_INTERVAL_MS = 10000;
+static const uint32_t DEFAULT_SENSOR_PUBLISH_INTERVAL_MS = 10000;
+static const uint32_t DEFAULT_NUMBER_PUBLISH_INTERVAL_MS = 10000;
+static const uint32_t DEFAULT_TEXT_PUBLISH_INTERVAL_MS = 10000;
 
 static const uint8_t MAX_NO_RESPONSE_COUNT = 10;
 
@@ -1814,7 +1814,9 @@ void JkRS485Bms::publish_state_(sensor::Sensor *sensor, float value) {
   }
   ESP_LOGVV(TAG, "Debug point 102 (--> %f)", value);
   const bool force_publish = std::isnan(value);
-  if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(sensor), SENSOR_PUBLISH_INTERVAL_MS, force_publish)) {
+  const uint32_t publish_interval_ms = this->parent_ != nullptr ? this->parent_->get_sensor_publish_interval()
+                                                                 : DEFAULT_SENSOR_PUBLISH_INTERVAL_MS;
+  if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(sensor), publish_interval_ms, force_publish)) {
     return;
   }
   sensor->publish_state(value);
@@ -1855,7 +1857,9 @@ void JkRS485Bms::publish_state_(JkRS485BmsNumber *number, float value) {
 
   if (reinterpret_cast<uintptr_t>(number) > 0x3f000000) {
     const bool force_publish = std::isnan(value);
-    if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(number), NUMBER_PUBLISH_INTERVAL_MS, force_publish)) {
+    const uint32_t publish_interval_ms = this->parent_ != nullptr ? this->parent_->get_number_publish_interval()
+                                                                   : DEFAULT_NUMBER_PUBLISH_INTERVAL_MS;
+    if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(number), publish_interval_ms, force_publish)) {
       return;
     }
     ESP_LOGV(TAG, "       ]* Publishing state %f for object with address %p [%f] %s", value, (void *) number,
@@ -1881,7 +1885,9 @@ void JkRS485Bms::publish_state_(text_sensor::TextSensor *text_sensor, const std:
   }
 
   const bool force_publish = state == "Offline";
-  if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(text_sensor), TEXT_PUBLISH_INTERVAL_MS, force_publish)) {
+  const uint32_t publish_interval_ms = this->parent_ != nullptr ? this->parent_->get_text_publish_interval()
+                                                                 : DEFAULT_TEXT_PUBLISH_INTERVAL_MS;
+  if (!this->should_publish_now_(reinterpret_cast<uintptr_t>(text_sensor), publish_interval_ms, force_publish)) {
     return;
   }
   text_sensor->publish_state(state);
