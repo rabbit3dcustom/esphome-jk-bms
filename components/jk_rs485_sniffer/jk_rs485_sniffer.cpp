@@ -642,9 +642,7 @@ void JkRS485Sniffer::loop_old() {
     // ESP_LOGD(TAG, "original_buffer_size < JKPB_RS485_MASTER_SHORT_REQUEST_SIZE");
     // ESP_LOGD(TAG, "..........................................");
 
-      if (ESP_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERY_VERBOSE) {
-        printBuffer_segmented(this->rx_buffer_, 0);
-      }
+      // Disabled in hot path to avoid blocking the component loop.
       
       response = this->manage_rx_buffer_();
       ESP_LOGVV(TAG, "manage_rx_buffer_()-Response: %d:", response);
@@ -790,9 +788,7 @@ void JkRS485Sniffer::loop() {
 
     
     ESP_LOGV(TAG, "JkRS485Sniffer::loop()-Buffer fill:");
-    if (ESP_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERY_VERBOSE) {
-      printBuffer_segmented(this->rx_buffer_.size());
-    }
+    // Disabled in hot path to avoid blocking the component loop.
   
     response = this->manage_rx_buffer_();
 
@@ -1355,9 +1351,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     // std::vector<uint8_t> data(this->rx_buffer_.begin() + 0, this->rx_buffer_.begin() + this->rx_buffer_.size() + 1);
     std::vector<uint8_t> data(this->rx_buffer_.begin() + 0, this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE);
 
-    if (ESP_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERY_VERBOSE) {
-      printBuffer_segmented(data, 0);
-    }
+    // Disabled in hot path to avoid blocking the component loop.
 
     ESP_LOGI(TAG, "Frame received from address: %02X type of information: 0x%02X)  ", address, raw[4]);
     ESP_LOGD(TAG, "Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
@@ -1366,9 +1360,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
     ESP_LOGD(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
     // ESP_LOGVV(TAG, "[%s]", format_hex_pretty(&data.front(), data.size()).c_str());
-    if (ESP_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERY_VERBOSE) {
-      printBuffer_segmented(this->rx_buffer_.size());
-    }
+    // Disabled in hot path to avoid blocking the component loop.
 
     bool found = false;
 
