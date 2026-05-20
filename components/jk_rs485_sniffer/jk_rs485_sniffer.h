@@ -146,7 +146,17 @@ class JkRS485Sniffer : public uart::UARTDevice, public output::TalkPin, public C
   uint32_t last_jk_rs485_pooling_trial_{0};
   std::vector<JkRS485SnifferDevice *> devices_;  
 
-  void write_state(bool state) override { this->talk_pin_->digital_write(state); }
+  void write_state(bool state) override {
+    ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state() #state:%d-->",
+              static_cast<int>(state));
+    if (this->talk_pin_ == nullptr) {
+      ESP_LOGE("jk_rs485_sniffer", "JkRS485Sniffer::write_state() #error:talk_pin_null");
+      ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state()--<");
+      return;
+    }
+    this->talk_pin_->digital_write(state);
+    ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state()--<");
+  }
   //void write_state(bool state) override { this->set_state(state); }
   GPIOPin *talk_pin_;
   bool talk_pin_needed_;

@@ -668,9 +668,9 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
   jk_rs485_sniffer::JkRS485Sniffer *parent_{nullptr};
   ProtocolVersion protocol_version_{PROTOCOL_VERSION_JK02_32S};
 
-  uint8_t address_;
-  uint8_t battery_total_alarms_count_;
-  uint8_t battery_total_alarms_active_;
+  uint8_t address_{0};
+  uint8_t battery_total_alarms_count_{0};
+  uint8_t battery_total_alarms_active_{0};
   std::string nodes_available;
   //std::vector<JkRS485BmsSwitch *> switches_; 
 
@@ -709,7 +709,7 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
   bool status_notification_received_ = false;
 
   uint32_t last_cell_info_{0};
-  uint32_t throttle_;
+  uint32_t throttle_{0};
 
   void decode_jk02_cell_info_(const std::vector<uint8_t> &data);
   void decode_jk02_settings_(const std::vector<uint8_t> &data);

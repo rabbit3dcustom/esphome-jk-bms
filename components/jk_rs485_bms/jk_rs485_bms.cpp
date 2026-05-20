@@ -600,9 +600,17 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
 
   uint8_t frame_version = FRAME_VERSION_JK02_32S;
   uint8_t offset = 16;
+  const size_t max_required_index = 226 + (offset * 2);
  
   // ESP_LOGD(TAG, "Decoding cell info frame.... [ADDRESS: %02X] %d bytes received", this->address_, data.size());
   ESP_LOGI(TAG, "Decoding cell info frame.... [ADDRESS: %02X] %d bytes received", this->address_, data.size());
+
+  if (data.size() <= max_required_index) {
+    ESP_LOGE(TAG,
+             "JkRS485Bms::decode_jk02_cell_info_() #error:frame_too_short #size:%u #required_min:%u--<",
+             static_cast<unsigned>(data.size()), static_cast<unsigned>(max_required_index + 1));
+    return;
+  }
 
   // ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front(), 150).c_str());
   // ESP_LOGVV(TAG, "  %s", format_hex_pretty(&data.front() + 150, data.size() - 150).c_str());
@@ -670,6 +678,13 @@ void JkRS485Bms::decode_jk02_cell_info_(const std::vector<uint8_t> &data) {
 
   if (cells_from_settings > 0) {
     cells = cells_from_settings;
+  }
+
+  if (cells > sizeof(this->cells_) / sizeof(this->cells_[0])) {
+    ESP_LOGW(TAG, "JkRS485Bms::decode_jk02_cell_info_() #cells_clamped:%u #max:%u",
+             static_cast<unsigned>(cells),
+             static_cast<unsigned>(sizeof(this->cells_) / sizeof(this->cells_[0])));
+    cells = sizeof(this->cells_) / sizeof(this->cells_[0]);
   }
 
   ESP_LOGD(TAG, "JkRS485Bms::decode_jk02_cell_info_: 1");

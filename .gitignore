@@ -37,3 +37,4 @@ tests/
 secrets.yaml
 components/jk_rs485_sniffer/old_snif.cpp
 **/*.sh
+logs/esphome-run.log
