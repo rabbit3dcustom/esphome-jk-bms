@@ -560,19 +560,31 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
         ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), 150).c_str());
     }
 
+    const bool has_cell_count_real_sensor = this->cell_count_real_sensor_ != nullptr;
+    const bool has_cell_count_settings_number = this->cell_count_settings_number_ != nullptr;
     const float cell_count_real_state =
-        this->cell_count_real_sensor_ != nullptr ? this->cell_count_real_sensor_->state : 0.0f;
+        has_cell_count_real_sensor ? this->cell_count_real_sensor_->state : 0.0f;
     const float cell_count_settings_state =
-        this->cell_count_settings_number_ != nullptr ? this->cell_count_settings_number_->state : 0.0f;
+        has_cell_count_settings_number ? this->cell_count_settings_number_->state : 0.0f;
     ESP_LOGD(TAG, "on_jk_rs485_sniffer_data()--cell_count_real_state: %f ", cell_count_real_state);
     ESP_LOGD(TAG, "on_jk_rs485_sniffer_data()--cell_count_settings_state: %f ", cell_count_settings_state);
+    ESP_LOGD(TAG, "on_jk_rs485_sniffer_data()--has_cell_count_settings_number: %d ",
+             has_cell_count_settings_number);
 
-    if (cell_count_real_state > 0 && cell_count_settings_state > 0) {
+    const bool has_required_online_data =
+        cell_count_real_state > 0 && (!has_cell_count_settings_number || cell_count_settings_state > 0);
+
+    if (has_required_online_data) {
       ESP_LOGD(TAG, "ONLINE successfull!");
       this->reset_status_online_tracker_();
     } else {
-      ESP_LOGI(TAG, "Cannot set ONLINE until arrived both 0x01 and 0x02 frame types");
-      ESP_LOGD(TAG, "Cannot set ONLINE until arrived both 0x01 and 0x02 frame types");
+      if (has_cell_count_settings_number) {
+        ESP_LOGI(TAG, "Cannot set ONLINE until arrived both 0x01 and 0x02 frame types");
+        ESP_LOGD(TAG, "Cannot set ONLINE until arrived both 0x01 and 0x02 frame types");
+      } else {
+        ESP_LOGI(TAG, "Cannot set ONLINE until arrived frame type 0x02 with valid cell count");
+        ESP_LOGD(TAG, "Cannot set ONLINE until arrived frame type 0x02 with valid cell count");
+      }
     }
 
   } else {
