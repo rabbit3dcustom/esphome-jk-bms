@@ -703,6 +703,7 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
   void publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state);
   void publish_alarm_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);  
   bool should_publish_now_(uintptr_t key, uint32_t interval_ms, bool force_publish = false);
+  void flush_network_nodes_available_();
   void publish_device_unavailable_();
   void reset_status_online_tracker_();
   void track_status_online_();
@@ -710,6 +711,7 @@ class JkRS485Bms : public PollingComponent, public jk_rs485_sniffer::JkRS485Snif
 
   bool status_notification_received_ = false;
   std::unordered_map<uintptr_t, uint32_t> last_publish_millis_;
+  bool network_nodes_available_dirty_{false};
 
   uint32_t last_cell_info_{0};
   uint32_t throttle_{0};

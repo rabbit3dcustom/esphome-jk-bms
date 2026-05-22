@@ -529,7 +529,8 @@ void JkRS485Bms::on_jk_rs485_sniffer_data(const uint8_t &origin_address, const u
 
   if (this->nodes_available != nodes_available_received) {
     this->nodes_available = nodes_available_received;
-    this->publish_state_(this->network_nodes_available_text_sensor_, this->nodes_available);
+    this->network_nodes_available_dirty_ = true;
+    this->flush_network_nodes_available_();
   }
 
   if (origin_address == this->address_) {
@@ -1570,7 +1571,10 @@ void JkRS485Bms::decode_jk02_settings_(const std::vector<uint8_t> &data) {
   this->trigger_bms2sniffer_event("WORKING ! #####", 01);
 }
 
-void JkRS485Bms::update() { this->track_status_online_(); }
+void JkRS485Bms::update() {
+  this->track_status_online_();
+  this->flush_network_nodes_available_();
+}
 
 void JkRS485Bms::decode_device_info_(const std::vector<uint8_t> &data) {
 
@@ -1790,6 +1794,26 @@ bool JkRS485Bms::should_publish_now_(uintptr_t key, uint32_t interval_ms, bool f
   }
 
   return false;
+}
+
+void JkRS485Bms::flush_network_nodes_available_() {
+  if (!this->network_nodes_available_dirty_) {
+    return;
+  }
+
+  if (this->network_nodes_available_text_sensor_ == nullptr) {
+    return;
+  }
+
+  const uint32_t publish_interval_ms = this->parent_ != nullptr ? this->parent_->get_text_publish_interval()
+                                                                 : DEFAULT_TEXT_PUBLISH_INTERVAL_MS;
+  const uintptr_t key = reinterpret_cast<uintptr_t>(this->network_nodes_available_text_sensor_);
+  if (!this->should_publish_now_(key, publish_interval_ms, false)) {
+    return;
+  }
+
+  this->network_nodes_available_text_sensor_->publish_state(this->nodes_available);
+  this->network_nodes_available_dirty_ = false;
 }
 
 // void JkRS485Bms::publish_state_(sensor::Sensor *sensor, float value) {
