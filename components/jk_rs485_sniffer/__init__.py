@@ -12,6 +12,9 @@ CONF_RX_TIMEOUT = "rx_timeout"
 CONF_PROTOCOL_VERSION = "protocol_version"
 CONF_TALK_PIN = "talk_pin"
 CONF_MASTER_FW_VERSION = "master_fw_version"
+CONF_SENSOR_PUBLISH_INTERVAL = "sensor_publish_interval"
+CONF_NUMBER_PUBLISH_INTERVAL = "number_publish_interval"
+CONF_TEXT_PUBLISH_INTERVAL = "text_publish_interval"
 
 jk_rs485_sniffer_ns = cg.esphome_ns.namespace("jk_rs485_sniffer")
 
@@ -43,7 +46,16 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_TALK_PIN): pins.internal_gpio_output_pin_schema,
             cv.Optional(
                 CONF_RX_TIMEOUT, default="50ms"
-            ): cv.positive_time_period_milliseconds,            
+            ): cv.positive_time_period_milliseconds,
+            cv.Optional(
+                CONF_SENSOR_PUBLISH_INTERVAL, default="10s"
+            ): cv.positive_time_period_milliseconds,
+            cv.Optional(
+                CONF_NUMBER_PUBLISH_INTERVAL, default="10s"
+            ): cv.positive_time_period_milliseconds,
+            cv.Optional(
+                CONF_TEXT_PUBLISH_INTERVAL, default="10s"
+            ): cv.positive_time_period_milliseconds,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -64,6 +76,9 @@ async def to_code(config):
 
     await uart.register_uart_device(var, config)
     cg.add(var.set_rx_timeout(config[CONF_RX_TIMEOUT]))
+    cg.add(var.set_sensor_publish_interval(config[CONF_SENSOR_PUBLISH_INTERVAL]))
+    cg.add(var.set_number_publish_interval(config[CONF_NUMBER_PUBLISH_INTERVAL]))
+    cg.add(var.set_text_publish_interval(config[CONF_TEXT_PUBLISH_INTERVAL]))
 
     if CONF_TALK_PIN in config:
        talk_pin = await cg.gpio_pin_expression(config[CONF_TALK_PIN])

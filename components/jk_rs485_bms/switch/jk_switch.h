@@ -38,10 +38,10 @@ class JkRS485BmsSwitch : public switch_::Switch, public Component {
   
  protected:
 
-  JkRS485Bms *parent_;
-  uint16_t register_address_;
-  uint8_t third_element_of_frame_;
-  uint8_t data_length_;
+  JkRS485Bms *parent_{nullptr};
+  uint16_t register_address_{0};
+  uint8_t third_element_of_frame_{0};
+  uint8_t data_length_{0};
 };
 
 

@@ -1,11 +1,17 @@
 {
   "folders": [
     {
-      "path": "."
+      "path": ".",
     },
     {
-      "path": "../esphome-jk-bms-documentation"
-    }
+      "path": "../esphome-jk-bms-documentation",
+    },
+    {
+      "path": "../../PowerShell/PowerShell.FramesJKBMS",
+    },
+    {
+      "path": "../../PowerShell/PowerShell.Global",
+    },
   ],
   "settings": {
     "files.associations": {
@@ -66,7 +72,7 @@
       "streambuf": "cpp",
       "thread": "cpp",
       "typeinfo": "cpp",
-      "xutility": "cpp"
-    }
-  }
+      "xutility": "cpp",
+    },
+  },
 }

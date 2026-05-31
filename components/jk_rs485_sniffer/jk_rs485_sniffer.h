@@ -103,6 +103,12 @@ class JkRS485Sniffer : public uart::UARTDevice, public output::TalkPin, public C
   float get_setup_priority() const override;
 
   void set_rx_timeout(uint16_t rx_timeout) { rx_timeout_ = rx_timeout; }
+  void set_sensor_publish_interval(uint32_t interval_ms) { sensor_publish_interval_ms_ = interval_ms; }
+  void set_number_publish_interval(uint32_t interval_ms) { number_publish_interval_ms_ = interval_ms; }
+  void set_text_publish_interval(uint32_t interval_ms) { text_publish_interval_ms_ = interval_ms; }
+  uint32_t get_sensor_publish_interval() const { return sensor_publish_interval_ms_; }
+  uint32_t get_number_publish_interval() const { return number_publish_interval_ms_; }
+  uint32_t get_text_publish_interval() const { return text_publish_interval_ms_; }
 
   void handle_bms2sniffer_event(std::uint8_t slave_address, std::string event, std::uint8_t frame_type);
 
@@ -141,12 +147,25 @@ class JkRS485Sniffer : public uart::UARTDevice, public output::TalkPin, public C
 
   std::vector<uint8_t> rx_buffer_;
   uint16_t rx_timeout_{50};
+  uint32_t sensor_publish_interval_ms_{10000};
+  uint32_t number_publish_interval_ms_{10000};
+  uint32_t text_publish_interval_ms_{10000};
   bool broadcast_changes_to_all_bms_;
   uint32_t last_jk_rs485_network_activity_{0};
   uint32_t last_jk_rs485_pooling_trial_{0};
   std::vector<JkRS485SnifferDevice *> devices_;  
 
-  void write_state(bool state) override { this->talk_pin_->digital_write(state); }
+  void write_state(bool state) override {
+    ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state() #state:%d-->",
+              static_cast<int>(state));
+    if (this->talk_pin_ == nullptr) {
+      ESP_LOGE("jk_rs485_sniffer", "JkRS485Sniffer::write_state() #error:talk_pin_null");
+      ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state()--<");
+      return;
+    }
+    this->talk_pin_->digital_write(state);
+    ESP_LOGVV("jk_rs485_sniffer", "JkRS485Sniffer::write_state()--<");
+  }
   //void write_state(bool state) override { this->set_state(state); }
   GPIOPin *talk_pin_;
   bool talk_pin_needed_;

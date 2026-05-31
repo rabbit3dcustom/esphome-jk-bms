@@ -32,12 +32,12 @@ class JkRS485BmsNumber : public number::Number, public Component {
  protected:
   void control(float value) override;
 
-  JkRS485Bms *parent_;
-  uint16_t register_address_;
-  uint8_t third_element_of_frame_;
-  uint8_t data_length_;
+  JkRS485Bms *parent_{nullptr};
+  uint16_t register_address_{0};
+  uint8_t third_element_of_frame_{0};
+  uint8_t data_length_{0};
   float factor_{1000.0f};
-  uint8_t type_;
+  uint8_t type_{0};
 
 
 };

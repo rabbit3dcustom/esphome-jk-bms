@@ -156,7 +156,7 @@ void JkRS485Sniffer::handle_bms2sniffer_switch_or_number_uint32_event(std::uint8
   if (this->broadcast_changes_to_all_bms_ == true) {
     for (uint8_t j = 1; j < 16; ++j) {
       if (rs485_network_node[j].available && slave_address != j) {
-        delayMicroseconds(50000);
+        delayMicroseconds(5000);
         send_command_switch_or_number_to_slave_uint32(j, third_element_of_frame, register_address, value);
       }
     }
@@ -185,7 +185,7 @@ void JkRS485Sniffer::handle_bms2sniffer_switch_or_number_int32_event(std::uint8_
   if (this->broadcast_changes_to_all_bms_ == true) {
     for (uint8_t j = 1; j < 16; ++j) {
       if (rs485_network_node[j].available && slave_address != j) {
-        delayMicroseconds(50000);
+        delayMicroseconds(5000);
         send_command_switch_or_number_to_slave_int32(j, third_element_of_frame, register_address, value);
       }
     }
@@ -210,7 +210,7 @@ void JkRS485Sniffer::handle_bms2sniffer_switch_or_number_uint16_event(std::uint8
   if (this->broadcast_changes_to_all_bms_ == true) {
     for (uint8_t j = 1; j < 16; ++j) {
       if (rs485_network_node[j].available && slave_address != j) {
-        delayMicroseconds(50000);
+        delayMicroseconds(5000);
         send_command_switch_or_number_to_slave_uint16(j, third_element_of_frame, register_address, value);
         rs485_network_node[j].last_device_info_request_received_OK = 0;
       }
@@ -642,7 +642,7 @@ void JkRS485Sniffer::loop_old() {
     // ESP_LOGD(TAG, "original_buffer_size < JKPB_RS485_MASTER_SHORT_REQUEST_SIZE");
     // ESP_LOGD(TAG, "..........................................");
 
-      printBuffer_segmented(this->rx_buffer_, 0);         
+      // Disabled in hot path to avoid blocking the component loop.
       
       response = this->manage_rx_buffer_();
       ESP_LOGVV(TAG, "manage_rx_buffer_()-Response: %d:", response);
@@ -788,7 +788,7 @@ void JkRS485Sniffer::loop() {
 
     
     ESP_LOGV(TAG, "JkRS485Sniffer::loop()-Buffer fill:");
-    printBuffer_segmented(this->rx_buffer_.size());
+    // Disabled in hot path to avoid blocking the component loop.
   
     response = this->manage_rx_buffer_();
 
@@ -1110,7 +1110,6 @@ void JkRS485Sniffer::detected_master_activity_now(void) {
 }
 
 uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
-  const uint8_t *raw = &this->rx_buffer_[0];
   uint8_t address = 0;
   
   const uint32_t now = millis();
@@ -1120,7 +1119,13 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
   ESP_LOGV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-[buffer: %d bytes]",this->rx_buffer_.size());
 
+  if (this->rx_buffer_.empty()) {
+    ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-Return 5 (empty buffer)");
+    return(5);
+  }
+
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_SHORT_REQUEST_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
     
     if (it == this->rx_buffer_.end()) {
@@ -1162,6 +1167,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
   }
 
   if (this->rx_buffer_.size() >= JKPB_RS485_MASTER_REQUEST_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     auto it = std::search(this->rx_buffer_.begin(), this->rx_buffer_.end(), pattern_response_header.begin(), pattern_response_header.end());
     bool try_with_master_request_size = false;
 
@@ -1277,6 +1283,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     // ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()- before JKPB_RS485_RESPONSE_SIZE 2 - address [0x%02X]", address);        
 
   if (this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE) {
+    const uint8_t *raw = this->rx_buffer_.data();
     ESP_LOGVV(TAG, "JkRS485Sniffer::manage_rx_buffer_()-this->rx_buffer_.size() >= JKPB_RS485_RESPONSE_SIZE 2");
 
     uint8_t computed_checksum = chksum(raw, JKPB_RS485_NUMBER_OF_ELEMENTS_TO_COMPUTE_CHECKSUM);
@@ -1344,7 +1351,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
     // std::vector<uint8_t> data(this->rx_buffer_.begin() + 0, this->rx_buffer_.begin() + this->rx_buffer_.size() + 1);
     std::vector<uint8_t> data(this->rx_buffer_.begin() + 0, this->rx_buffer_.begin() + JKPB_RS485_RESPONSE_SIZE);
 
-    printBuffer_segmented(data, 0);
+    // Disabled in hot path to avoid blocking the component loop.
 
     ESP_LOGI(TAG, "Frame received from address: %02X type of information: 0x%02X)  ", address, raw[4]);
     ESP_LOGD(TAG, "Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
@@ -1353,7 +1360,7 @@ uint8_t JkRS485Sniffer::manage_rx_buffer_(void) {
 
     ESP_LOGD(TAG, "JkRS485Sniffer::manage_rx_buffer_()-JKPB_RS485_RESPONSE_SIZE 2: Frame received from SLAVE (type: 0x%02X, %d bytes) %02X address", raw[4], data.size(), address);
     // ESP_LOGVV(TAG, "[%s]", format_hex_pretty(&data.front(), data.size()).c_str());
-    printBuffer_segmented(this->rx_buffer_.size());      
+    // Disabled in hot path to avoid blocking the component loop.
 
     bool found = false;
 

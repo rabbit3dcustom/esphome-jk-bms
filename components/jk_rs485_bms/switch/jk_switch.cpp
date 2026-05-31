@@ -20,8 +20,12 @@ JkRS485BmsSwitch::JkRS485BmsSwitch(bool initial_state) {
 void JkRS485BmsSwitch::dump_config() { LOG_SWITCH("", "JkRS485BmsSwitch DUMP CONFIG", this); }
 
 void JkRS485BmsSwitch::write_state(bool state) {
+    ESP_LOGVV(TAG, "JkRS485BmsSwitch::write_state() #state:%d #register:0x%04X #data_length:%d-->",
+              static_cast<int>(state), this->register_address_, this->data_length_);
+
     if (this->parent_ == nullptr) {
         ESP_LOGE(TAG, "Parent is null");
+        ESP_LOGVV(TAG, "JkRS485BmsSwitch::write_state()--<");
         return;
     }
 
@@ -35,9 +39,8 @@ void JkRS485BmsSwitch::write_state(bool state) {
       }
       //this->publish_state(state);
     }
-    
 
-    
+    ESP_LOGVV(TAG, "JkRS485BmsSwitch::write_state()--<");
 }
 
 

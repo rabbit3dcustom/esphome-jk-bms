@@ -16,28 +16,43 @@ Everything you need is here!
 
 **[Click here](https://github.com/rabbit3dcustom/esphome-jk-bms-documentation/tree/main/esphome-jk-bms-component/README.md) for more info.**
 
+## Changes
+
+See [CHANGELOG.md](./CHANGELOG.md).
+
 ## Release versions
 
+- V1.6: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.6
+  - Home assisant losts communication all the time.
+  - ESPHome unable to disconnect API.
+  - ESP32 ends failing.
+  - Added publishing intervals to avoid time-out and reconnections.
+  - Tested on JK-PB v19 fw:19.03;fw:19.16
+
+- V1.5: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.5
+  - SCHEMA DEPRECATED improvement
+  - Tested on JK-PB v19 fw:19.03;fw:19.16
+
 - V1.4: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.4
-    - Refactoring code.
-    - Tested on JK-PB v19 fw:19.03
+  - Refactoring code.
+  - Tested on JK-PB v19 fw:19.03
 
 - V1.3: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.3
-    - Bug: Alarms are again active.
+  - Bug: Alarms are again active.
 
 - V1.2: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v1.2
-    - Improve logs: VERY_VERBOSE and INFO
-    - Better frame detection
-    - Fast response to esphome
+  - Improve logs: VERY_VERBOSE and INFO
+  - Better frame detection
+  - Fast response to esphome
 
-- V1.0: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v.1.0 
-    - Clean non mandatory files.
-    - Avoid downloading the home assistant dashboards into the ESP32 compilation
-    - Avoid downloading all the docs related to protocols
+- V1.0: https://github.com/rabbit3dcustom/esphome-jk-bms/releases/tag/v.1.0
+  - Clean non mandatory files.
+  - Avoid downloading the home assistant dashboards into the ESP32 compilation
+  - Avoid downloading all the docs related to protocols
 
 ## Thanks to
 
-Txubelatxu: https://github.com/txubelaxu/esphome-jk-bms 
+Txubelatxu: https://github.com/txubelaxu/esphome-jk-bms
 
 syssi: https://github.com/syssi/esphome-jk-bms
 
@@ -47,13 +62,13 @@ If you want to tip me for this work, you can now buy me a coffee
 
 [!["Buy Me A Coffee"](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://coff.ee/rabbit3dcustom)
 
-
 <details>
 
 <summary>Other related information</summary>
 
 ## Other related
-**NEW:** monitor your new JK-PBx BMSs via internal RS485 network using 1 only ESP.  Home Assistant dashboards inside as well.
+
+**NEW:** monitor your new JK-PBx BMSs via internal RS485 network using 1 only ESP. Home Assistant dashboards inside as well.
 
 **Last Change:** Added RCV Time and RFV Time as Read & Write
 
